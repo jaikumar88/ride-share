@@ -1,0 +1,1333 @@
+{
+	"info": {
+		"_postman_id": "074b3bb0-2b04-4a87-9fac-0a7c45d14131",
+		"name": "RideShare",
+		"description": "This collection has following entirties\n\nRole\n\nUser\n\nCar\n\nDriver\n\nRide\n\nCreate three roles Admin, Manager, Driver to access system\n\nSequence of operation\n\n1: Create three roles.\n\n2: Create Admin, Manager user\n\n3: Login as Admin or Manager\n\n4: GetAllUser to initialize all roles ids\n\n5: Create Car\n\n6: Create Driver\n\n7: Create Ride, then you can complete ride anytime or cancel ride\n\n8: If you want to change driver status you can update status to OFFDUTY",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40403971"
+	},
+	"item": [
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Admin Role",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"\r",
+									"pm.environment.set(\"role_id\", response.id)\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Admin\", // Admin, manager, Driver\n    \"description\": \"Driver role with full access\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9099/roles",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ManagerRole",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"\r",
+									"pm.environment.set(\"role_id\", response.id)\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Manager\", // Admin, manager, Driver\n    \"description\": \"Driver role with full access\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9099/roles",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver Role",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"\r",
+									"pm.environment.set(\"role_id\", response.id)\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Driver\", // Admin, manager, Driver\n    \"description\": \"Driver role with full access\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9099/roles",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"\r",
+									"if(!pm.environment.has(\"manager_role\")){\r",
+									"  createEnvVarIfNotExists(\"manager_role\")\r",
+									"}\r",
+									"\r",
+									"// Find first user by role\r",
+									"let manager = response.find(it => it.name === \"Manager\");\r",
+									"let admin = response.find(it => it.name === \"Admin\");\r",
+									"let driver = response.find(it => it.name === \"Driver\");\r",
+									"\r",
+									"eval(pm.globals.get(\"createEnvVarIfNotExists\"));\r",
+									"\r",
+									"// Set manager and admin variables\r",
+									"if (manager) pm.environment.set(\"manager_role\", manager.id);\r",
+									"if (admin) pm.environment.set(\"admin_role\", admin.id);\r",
+									"if (driver) pm.environment.set(\"driver_role\", driver.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9099/roles",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9099/roles/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"roles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "123e4567-e89b-12d3-a456-426614174000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Role",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Super Admin\",\n    \"description\": \"Super Administrator role with extended privileges\"\n}"
+						},
+						"url": {
+							"raw": "localhost:9099/roles/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"roles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{admin_role}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9099/roles/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"roles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "123e4567-e89b-12d3-a456-426614174000"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"eval(pm.globals.get(\"createEnvVarIfNotExists\"));\r",
+									"createEnvVarIfNotExists(\"user_id\", null)\r",
+									"// Set token\r",
+									"if (response.token) pm.environment.set(\"token\", response.token);\r",
+									"\r",
+									"if(response.id)  pm.environment.set(\"user_id\", response.id);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"User1\",\n    \"email\": \"johndoe@example.com\",\n    \"loginId\": \"admin1\",\n    \"password\": \"securepassword\",\n    \"roleIds\": [{{admin_role}}]\n}"
+						},
+						"url": {
+							"raw": "localhost:9099/users",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Manager",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"eval(pm.globals.get(\"createEnvVarIfNotExists\"));\r",
+									"createEnvVarIfNotExists(\"user_id\", null)\r",
+									"// Set token\r",
+									"if (response.token) pm.environment.set(\"token\", response.token);\r",
+									"\r",
+									"if(response.id)  pm.environment.set(\"user_id\", response.id);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"User1\",\n    \"email\": \"johndoe@example.com\",\n    \"loginId\": \"manager1\",\n    \"password\": \"securepassword\",\n    \"roleIds\": [{{manager_role}}]\n}"
+						},
+						"url": {
+							"raw": "localhost:9099/users",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"\r",
+									"\r",
+									"eval(pm.globals.get(\"createEnvVarIfNotExists\"));\r",
+									"createEnvVarIfNotExists(\"token\", null)\r",
+									"// Set token\r",
+									"if (response.token) pm.environment.set(\"token\", response.token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"loginId\": \"admin1\",\r\n    \"password\": \"securepassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9099/login",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Manager",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"\r",
+									"\r",
+									"eval(pm.globals.get(\"createEnvVarIfNotExists\"));\r",
+									"createEnvVarIfNotExists(\"token\", null)\r",
+									"// Set token\r",
+									"if (response.token) pm.environment.set(\"token\", response.token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"loginId\": \"manager1\",\r\n    \"password\": \"securepassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9099/login",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9099/users",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9099/users/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{user_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"User1\",\n    \"email\": \"johndoe@example.com\",\n    \"loginId\": \"user1\",\n    \"password\": \"securepassword\",\n    \"roleIds\": [{{manager_role}}]\n}"
+						},
+						"url": {
+							"raw": "localhost:9099/users/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{user_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9099/users/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{user_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Car",
+			"item": [
+				{
+					"name": "CreateCar",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"\r",
+									"eval(pm.globals.get(\"createEnvVarIfNotExists\"));\r",
+									"createEnvVarIfNotExists(\"token\", response.token);\r",
+									"createEnvVarIfNotExists(\"car_id\", response.id);\r",
+									"// Set token\r",
+									"if (response.token) pm.environment.set(\"token\", response.token);\r",
+									"\r",
+									"if(response.id)  pm.environment.set(\"car_id\", response.id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"make\": \"Honda\",\r\n    \"model\": \"Accord\",\r\n    \"color\": \"Black\",\r\n    \"carType\": \"SEDAN\",\r\n    \"regNo\": \"UP-HT-1122\",\r\n    \"insuranceId\": \"INS12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9099/cars",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllCars",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9099/cars",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllCarByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9099/cars/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"cars",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{car_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateCar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"make\": \"Honda\",\r\n    \"model\": \"Accord LXS\",\r\n    \"color\": \"Black\",\r\n    \"carType\": \"Sadan\",\r\n    \"regNo\": \"UP-HT-1123\",\r\n    \"insuranceId\": \"INS12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9099/cars/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"cars",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{car_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteCar",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9099/cars/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"cars",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{car_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Drivers",
+			"item": [
+				{
+					"name": "CreateDriver",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"\r",
+									"\r",
+									"eval(pm.globals.get(\"createEnvVarIfNotExists\"));\r",
+									"createEnvVarIfNotExists(\"driver_id\", response.id);\r",
+									"\r",
+									"\r",
+									"if(response.id)  pm.environment.set(\"driver_id\", response.id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Parker\",\n    \"email\": \"driver2@example.com\",\n    \"loginId\": \"driver2\",\n    \"password\": \"securepassword\",\n    \"roleIds\": [{{driver_role}}],\n    \"status\": \"AVAILABLE\",\n    \"carId\": {{car_id}}\n}"
+						},
+						"url": {
+							"raw": "localhost:9099/drivers",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"drivers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Driver",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"\r",
+									"\r",
+									"eval(pm.globals.get(\"createEnvVarIfNotExists\"));\r",
+									"createEnvVarIfNotExists(\"token\", null)\r",
+									"// Set token\r",
+									"if (response.token) pm.environment.set(\"token\", response.token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"loginId\": \"driver1\",\r\n    \"password\": \"securepassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9099/login",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllDrivers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9099/drivers",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"drivers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetDriverById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9099/drivers/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"drivers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{driver_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AvailableDriver",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9099/drivers/available",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"drivers",
+								"available"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AllAvailableDriver",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9099/drivers/available/all",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"drivers",
+								"available",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateDriverStatus",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"loginId\": \"driver1\",\r\n    \"status\": \"AVAILABLE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9099/drivers/status/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"drivers",
+								"status",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateDriver",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"John Parker\",\r\n    \"email\": \"johndoe@example.com\",\r\n    \"loginId\": \"driver1\",\r\n    \"password\": \"securepassword\",\r\n    \"roleIds\": [\r\n        {{driver_role}}\r\n    ],\r\n    \"status\": \"CREATED\",\r\n    \"carId\": \"e08a12e3-26e1-43ea-a1e0-001500f0103e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9099/drivers/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"drivers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{driver_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteDriver",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9099/drivers/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"drivers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ride",
+			"item": [
+				{
+					"name": "BookRide",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(),\r",
+									"savedData = JSON.stringify(response);\r",
+									"\r",
+									"\r",
+									"eval(pm.globals.get(\"createEnvVarIfNotExists\"));\r",
+									"createEnvVarIfNotExists(\"ride_id\", response.id);\r",
+									"\r",
+									"\r",
+									"if(response.id)  pm.environment.set(\"ride_id\", response.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjb20ucmlkZXNoYXJlLmF1ZGllbmNlIiwibG9naW5JZCI6ImRyaXZlcjIiLCJyb2xlcyI6WyI5ZGYzMDQyYS02YWNmLTQ2ZWYtOWNlYy0xNjU5ZTY2ZWViY2IiXSwiaXNzIjoiY29tLmluZm9nYWluIiwiZXhwIjoxNzM4MTk3NzU4fQ.3aund8tCZ9ycwGKcBk5JYhTb7Ydhxu4mQI52_KSlHrE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": {{user_id}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9099/rides",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"rides"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CompleteRide",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"COMPLETE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9099/rides/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"rides",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{ride_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CancelRide",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"CANCEL\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9099/rides/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"rides",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{ride_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllRides",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9099/rides",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"rides"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetRideById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9099/rides/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"rides",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{ride_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteRide",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:9099/rides/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "9099",
+							"path": [
+								"rides",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "7a95702f-7ec7-4e84-abda-faffdc1d6277"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"// Function to create environment variable only if it does not exist\r",
+					"function createEnvVarIfNotExists(variableName, defaultValue) {\r",
+					"    if (!pm.environment.has(variableName)) {  // Check if variable exists\r",
+					"        pm.environment.set(variableName, defaultValue);\r",
+					"        console.log(`Created environment variable '${variableName}' with value:`, defaultValue);\r",
+					"    } else {\r",
+					"        console.log(`Environment variable '${variableName}' already exists with value:`, pm.environment.get(variableName));\r",
+					"    }\r",
+					"}\r",
+					"\r",
+					"// Store the function in the Postman global context so it can be used in individual requests\r",
+					"pm.globals.set(\"createEnvVarIfNotExists\", createEnvVarIfNotExists.toString());\r",
+					"\r",
+					"createEnvVarIfNotExists(\"manager_role\",null)\r",
+					"createEnvVarIfNotExists(\"admin_role\",null)\r",
+					"createEnvVarIfNotExists(\"driver_role\",null)\r",
+					"createEnvVarIfNotExists(\"user_role\",null)\r",
+					"createEnvVarIfNotExists(\"user_id\",null)\r",
+					"createEnvVarIfNotExists(\"role_id\",null)\r",
+					"createEnvVarIfNotExists(\"car_id\",null)"
+				]
+			}
+		}
+	]
+}
