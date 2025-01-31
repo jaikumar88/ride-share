@@ -1,0 +1,19 @@
+ktor:
+    application:
+        modules:
+            - com.rideshare.app.ApplicationKt.module
+    deployment:
+        port: 9099
+database:
+  //driver: "org.postgresql.Driver"
+  driver: "org.h2.Driver"
+  url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;"
+  //url: "jdbc:postgresql://localhost:5432/rideshare"
+  //user: "postgres"
+  //password: "postgres"
+  user: "sa"
+  password: ""
+
+
+
+
