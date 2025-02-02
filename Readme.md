@@ -1,4 +1,4 @@
-<h1>Ride Share system</h1>h1>
+<h1>Ride Share system</h1>
 
 This collection has following entirties
 
