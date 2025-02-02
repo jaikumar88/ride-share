@@ -9,6 +9,8 @@ import com.rideshare.app.models.RideTable
 import com.rideshare.app.models.RolesTable
 import com.rideshare.app.models.UserRolesTable
 import com.rideshare.app.models.UsersTable
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.ApplicationEnvironment
 import kotlinx.serialization.Serializable
 import net.mamoe.yamlkt.Yaml
@@ -26,6 +28,29 @@ data class ServerInfo(val host: String, val port: String)
 data class AppConfig(
     val database: DatabaseConfig
 )
+
+lateinit var dataSource: HikariDataSource
+
+suspend fun initDatabase() {
+    val config = ConfigClient.fetchConfig("ride-share")  // Application name
+
+    val jdbcUrl = config["datasource.url"] ?: throw Exception("Database URL not found")
+    val username = config["datasource.username"] ?: "root"
+    val password = config["datasource.password"] ?: "root"
+    val driver = config["datasource.driver"]?: "org.postgresql.Driver"
+    val hikariConfig = HikariConfig().apply {
+        this.jdbcUrl = jdbcUrl
+        this.username = username
+        this.password = password
+        driverClassName = "com.mysql.cj.jdbc.Driver"
+        maximumPoolSize = 10
+    }
+
+    dataSource = HikariDataSource(hikariConfig)
+    Database.connect(dataSource)
+
+    println("✅ Database initialized successfully using profile: ${System.getenv("SPRING_PROFILES_ACTIVE")}")
+}
 
 fun initializeDBConfiguration(environment: ApplicationEnvironment) {
 

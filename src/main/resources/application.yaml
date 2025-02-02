@@ -5,14 +5,19 @@ ktor:
     deployment:
         port: 9099
 database:
-  //driver: "org.postgresql.Driver"
-  driver: "org.h2.Driver"
-  url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;"
+  driver: "org.postgresql.Driver"
+  url: "jdbc:postgresql://postgres_container:5432/orders_db"
   //url: "jdbc:postgresql://localhost:5432/rideshare"
   //user: "postgres"
   //password: "postgres"
-  user: "sa"
-  password: ""
+  user: "root"
+  password: "root"
+
+
+  //driver: "org.h2.Driver"
+  //url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;"
+  //user: "sa"
+  //password: ""
 
 
 
